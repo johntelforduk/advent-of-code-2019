@@ -3,10 +3,10 @@
 
 
 # Return fuel needed to lift a given mass.
-# "... to find the fuel required for a module, take its each_mass, divide by three, round down, and subtract 2."
+# "... to find the fuel required for a module, take its mass, divide by three, round down, and subtract 2."
 def mass_to_fuel(mass):
     fuel = int(mass / 3) - 2
-    if fuel < 0:                    # -ve each_mass requires zero fuel.
+    if fuel < 0:                    # -ve mass requires zero fuel.
         return 0
     else:
         return fuel
@@ -15,7 +15,7 @@ def mass_to_fuel(mass):
 # Calculate total fuel needed to lift a mass, taking into account fuel needed to lift the mass of the fuel.
 def total_fuel(mass):
     this_fuel = mass_to_fuel(mass)
-    if this_fuel == 0:              # Zero each_mass requires zero fuel.
+    if this_fuel == 0:              # Zero mass requires zero fuel.
         return 0
     else:
         return this_fuel + total_fuel(this_fuel)
