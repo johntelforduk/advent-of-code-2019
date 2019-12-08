@@ -19,6 +19,7 @@ class Computer:
 
         self.halted = False                 # Program is still running.
         self.input, self.output = 0, 0      # Most recent input and output from the computer.
+        self.new_output = False             # True whenever the computer produces new output.
 
     def load(self, filename: str):
         """Load a program from parm filename into the memory of the computer."""
@@ -90,6 +91,7 @@ class Computer:
         """Opcode 4 outputs the value of its only parameter.
         For example, the instruction 4, 50 would output the value at address 50."""
         self.output = self.parm_value(0)
+        self.new_output = True                      # Flag that new output has been produced.
         if self.interactive_mode:
             print("Output:", self.output)
 
@@ -152,3 +154,15 @@ class Computer:
         """Run program. Start at position of instruction pointer. End when program halts."""
         while not self.halted:
             self.tick()
+
+    def run_until_output(self):
+        """Run program until it either produces some output, or it halts."""
+        # Reset the new output produced attribute. If new output is emitted, it will ne set to True.
+        self.new_output = False
+
+        while not self.new_output and not self.halted:
+            self.tick()
+
+    def dump(self):
+        """Print contents of important attributes."""
+        print('IP:', self.instruction_pointer, 'Input:', self.input, 'Output:', self.output, 'Halted:', self.halted)
