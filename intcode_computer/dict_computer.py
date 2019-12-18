@@ -6,11 +6,12 @@
 
 class Computer:
 
-    def __init__(self, interactive_mode: bool):
+    def __init__(self, output_to_screen: bool):
         """Boot up a new computer."""
 
         # True means that input is read from keyboard, and stdout is printed.
-        self.interactive_mode = interactive_mode
+        self.output_to_screen = output_to_screen
+        self.input_from_keyboard = output_to_screen     # Good default for this.
 
         self.memory = {}                    # The computer's memory is a dictionary.
         self.instruction_pointer = 0        # Current position of instruction pointer.
@@ -107,7 +108,7 @@ class Computer:
     def take_input(self):
         """Opcode 3 takes a single integer as input and saves it to the position given by its only parameter.
         For example, the instruction 3, 50 would take an input value and store it at address 50."""
-        if self.interactive_mode:
+        if self.input_from_keyboard:
             print('Input: ', end='')
             self.input = int(input())
         self.assign_to_target(parm_number=0, assignment=self.input)
@@ -117,7 +118,7 @@ class Computer:
         For example, the instruction 4, 50 would output the value at address 50."""
         self.output = self.parm_value(0)
         self.new_output = True                      # Flag that new output has been produced.
-        if self.interactive_mode:
+        if self.output_to_screen:
             print("Output:", self.output)
 
     def adjust_relative_base(self):
@@ -134,6 +135,8 @@ class Computer:
 
         # Reset the branched attribute. If this operation causes a branch, it will be set to True.
         self.branched = False
+        self.new_output = False
+
 
         # Left pad the code with leading zeros to make it five chars long.
         long_code = str(self.memory[self.instruction_pointer]).zfill(5)
