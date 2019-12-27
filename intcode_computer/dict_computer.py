@@ -23,6 +23,8 @@ class Computer:
 
         self.halted = False                 # Program is still running.
         self.input, self.output = 0, 0      # Most recent input and output from the computer.
+
+        self.new_input = False              # True whenever the computer takes new input.
         self.new_output = False             # True whenever the computer produces new output.
 
     def load_list(self, program_list: []):
@@ -112,6 +114,7 @@ class Computer:
             print('Input: ', end='')
             self.input = int(input())
         self.assign_to_target(parm_number=0, assignment=self.input)
+        self.new_input = True
 
     def emit_output(self):
         """Opcode 4 outputs the value of its only parameter.
@@ -135,8 +138,8 @@ class Computer:
 
         # Reset the branched attribute. If this operation causes a branch, it will be set to True.
         self.branched = False
+        self.new_input = False
         self.new_output = False
-
 
         # Left pad the code with leading zeros to make it five chars long.
         long_code = str(self.memory[self.instruction_pointer]).zfill(5)
@@ -195,6 +198,23 @@ class Computer:
         self.new_output = False
 
         while not self.new_output and not self.halted:
+            self.tick()
+
+    # def run_until_input(self):
+    #     """Run program until it either produces prompts for some input, or it halts."""
+    #     # Reset the new input produced attribute. If new input is  is emitted, it will ne set to True.
+    #     self.new_input = False
+    #
+    #     while not self.new_output and not self.halted:
+    #         self.tick()
+
+    def run_until_io(self):
+        """Run program until it either produces some input, or output, or it halts."""
+        # Reset the new input and output produced attributes.
+        self.new_input = False
+        self.new_output = False
+
+        while not self.new_input and not self.new_output and not self.halted:
             self.tick()
 
     def dump(self):
